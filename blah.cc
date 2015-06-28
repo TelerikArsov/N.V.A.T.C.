@@ -119,19 +119,15 @@ int main()
 				for(;x<=endWidth;x++)
 				{
 					Scalar intensity = gray_image.at<uchar>(y,x);
-					//image.at<Vec3b>(y,x)[0] = 255;
-					 //image.at<Vec3b>(y,x)[1] = 123;
-					 //image.at<Vec3b>(y,x)[2] = 215;
-					 if(intensity.val[0] < 100)
-					 {
-						  counter[i][j]++;
-					 }
+					if(intensity.val[0] < 150)
+					{
+						counter[i][j]++;
+					}
 				}
 				x = 219 + j*45;
 			}
-			if( counter[i][j] > 60)
+			if( counter[i][j] > 90)
 			{
-				//cout<<"j: "<<j<<endl;
 				switch (j)
 				{
 					case 0:
@@ -162,24 +158,17 @@ int main()
 	{
 		cout << (i+1) << ": "<< marks[i]<<endl; 
 	}
-	for(int i = 0; i < questionCount; i++)
-	{
-		for(int j = 0; j < answerCount; j++)
-		{
-			cout << (i+1) << ": "<< counter[i][j]<<endl; 
-		}
-	}
 
 	Scalar intensitytest = gray_image.at<uchar>(0,0);
 	cout << "intensityS"<<intensitytest.val[0];
 	
-	//cout << "Molq Vuvedete pravilnete otgovori"<<endl;
-	//for(int i = 0; i < questionCount; i++)
-	//{
-	//		cout<<i + 1<<"vpros:"<< ": ";
-	//		cin >> answers[i];
-	//		cout<<endl;
-	//}
+	cout << "Molq Vuvedete pravilnete otgovori"<<endl;
+	for(int i = 0; i < questionCount; i++)
+	{
+			cout<<i + 1<<" vpros: ";
+			cin >> answers[i];
+			cout<<endl;
+	}
 
 	int guessed = 0;
 	for(int i = 0; i < questionCount; i++ )
@@ -189,7 +178,7 @@ int main()
 			guessed++;
 		}
 	}
-	cout << guessed;
+	cout <<"You have "<<guessed<<" right answers. "<<endl;
 	namedWindow( imageName, CV_WINDOW_AUTOSIZE );
 	namedWindow( "Gray imageEdges", CV_WINDOW_AUTOSIZE );
 	//cout << "alpaha : "<<alpha << endl; 
@@ -199,6 +188,6 @@ int main()
 	waitKey(0);
 
 	return 0;
-	}
+}
 	
 			
