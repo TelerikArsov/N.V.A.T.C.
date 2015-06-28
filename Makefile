@@ -1,2 +1,2 @@
 all:
-	g++ blah.cc $$(pkg-config opencv --libs --cflags)
+	g++ -ggdb blah.cc $$(pkg-config opencv --libs --cflags)

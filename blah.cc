@@ -49,11 +49,12 @@ int main()
     }
 
     Mat gray_image;
+    Mat gray_image_rep;
     cvtColor( image, gray_image, CV_BGR2GRAY );
 
-    Canny(gray_image, gray_image, 0, 1, 3);
+    Canny(gray_image, gray_image_rep, 0, 1, 3);
     vector<Vec4i> lines;
-    HoughLinesP(gray_image, lines, 1, CV_PI/180, 1, 0, 0);
+    HoughLinesP(gray_image_rep, lines, 1, CV_PI/180, 1, 0, 0);
     
     vector<Point2f> corners;
     for (int i = 0; i < lines.size(); i++)
@@ -93,7 +94,7 @@ int main()
 	int endWidth = 240;
 	int answerCount = 4;
 	int questionCount = 19;
-	int counter[answerCount];
+	int counter[questionCount][answerCount];
 	char marks [questionCount];
 	int y=144,x=219;
 
@@ -101,24 +102,36 @@ int main()
 	{
 		for(int j=0; j < answerCount;j++)
 		{
-			for(y;y<=endHeight;y++)
+			counter[i][j] = 0;
+		}
+	}
+
+	for(int i = 0; i < questionCount;i++)
+	{
+		for(int j=0; j < answerCount;j++)
+		{
+			for(;y<=endHeight;y++)
 			{
-				for(x;x<=endWidth;x++)
+				//if(i<2)
+				//{
+				//	cout<<"i: "<<i<<" j: "<<j<<" y: "<<y<<" x: "<<x<<" endWidth: "<<endWidth<<" endHeight: "<<endHeight<<endl;
+				//}
+				for(;x<=endWidth;x++)
 				{
-					 Scalar intensity = gray_image.at<uchar>(y,x);
-					 image.at<Vec3b>(y,x)[0] = 255;
-					 image.at<Vec3b>(y,x)[1] = 123;
-					 image.at<Vec3b>(y,x)[2] = 215;
-					 if(intensity.val[0] > 120)
+					Scalar intensity = gray_image.at<uchar>(y,x);
+					//image.at<Vec3b>(y,x)[0] = 255;
+					 //image.at<Vec3b>(y,x)[1] = 123;
+					 //image.at<Vec3b>(y,x)[2] = 215;
+					 if(intensity.val[0] < 100)
 					 {
-						  counter[j]++;
+						  counter[i][j]++;
 					 }
 				}
-				x = 219;
+				x = 219 + j*45;
 			}
-			if( counter[j] > 100)
+			if( counter[i][j] > 60)
 			{
-				cout<<"j: "<<j<<endl;
+				//cout<<"j: "<<j<<endl;
 				switch (j)
 				{
 					case 0:
@@ -135,12 +148,11 @@ int main()
 						break;
 				}
 			}
-			y += 37;
-			counter[j] = 0;
-			x += 45;
+			y = 144 + i*37;
 			endWidth += 45;
 		}
 		endWidth = 240;
+		x = 219;
 		endHeight += 37;
 	}
 
@@ -149,6 +161,13 @@ int main()
 	for(int i = 0; i < questionCount; i++)
 	{
 		cout << (i+1) << ": "<< marks[i]<<endl; 
+	}
+	for(int i = 0; i < questionCount; i++)
+	{
+		for(int j = 0; j < answerCount; j++)
+		{
+			cout << (i+1) << ": "<< counter[i][j]<<endl; 
+		}
 	}
 
 	Scalar intensitytest = gray_image.at<uchar>(0,0);
@@ -167,7 +186,7 @@ int main()
 	{
 		if(answers[i] == marks[i])
 		{
-		guessed++;
+			guessed++;
 		}
 	}
 	cout << guessed;
@@ -175,9 +194,11 @@ int main()
 	namedWindow( "Gray imageEdges", CV_WINDOW_AUTOSIZE );
 	//cout << "alpaha : "<<alpha << endl; 
 	imshow( imageName, image );
-	imshow( "Gray imageEdges", gray_image );
+	imshow( "Gray imageEdges", gray_image_rep );
 
 	waitKey(0);
 
 	return 0;
 	}
+	
+			
